@@ -1,0 +1,30 @@
+{
+  "investmentCurrency": "EUR",
+  "propertyCurrency": "AED",
+  "investmentAmountCurrency": "AED",
+  "returnRate": 19.9,
+  "initialHouseAmount": 2204405.0,
+  "sellingAmount": 2500000.0,
+  "payments": [
+    {
+      "date": "2023-09-04",
+      "amount": 440881.0,
+      "amount_currency": "AED"
+    },
+    {
+      "date": "2024-05-27",
+      "amount": 220441.0,
+      "amount_currency": "AED"
+    },
+    {
+      "date": "2024-11-23",
+      "amount": 220441.0,
+      "amount_currency": "AED"
+    },
+    {
+      "date": "2025-05-22",
+      "amount": 220441.0,
+      "amount_currency": "AED"
+    }
+  ]
+}
