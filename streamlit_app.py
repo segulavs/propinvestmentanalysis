@@ -1450,6 +1450,78 @@ def main():
                 f"{results['summary']['pure_roi']:.2f}%",
                 f"{SUPPORTED_CURRENCIES[investment_currency]['symbol']}{results['summary']['total_pure_interest']:,.2f}"
             )
+        
+        # Investment Returns Table
+        st.subheader("📋 Investment Returns Breakdown")
+        st.write("Detailed breakdown of returns for each individual investment:")
+        
+        # Create a DataFrame for the investment returns table
+        investment_data = []
+        for payment in results['results']:
+            investment_data.append({
+                'Date': payment['date'],
+                'Original Amount': f"{SUPPORTED_CURRENCIES[payment['amount_currency']]['symbol']}{payment['amount']:,.2f}",
+                'Currency': payment['amount_currency'],
+                'Years Invested': f"{payment['years']:.2f}",
+                'Future Value': f"{SUPPORTED_CURRENCIES[investment_currency]['symbol']}{payment['future_value_investment_currency']:,.2f}",
+                'Interest Earned': f"{SUPPORTED_CURRENCIES[investment_currency]['symbol']}{payment['pure_interest_earned_investment_currency']:,.2f}",
+                'ROI %': f"{((payment['future_value_investment_currency'] / payment['amount_in_investment_currency'] - 1) * 100):.2f}%",
+                'Exchange Rate': f"{payment['investment_date_rate']:.4f}"
+            })
+        
+        # Display the table
+        if investment_data:
+            df = pd.DataFrame(investment_data)
+            st.dataframe(
+                df,
+                column_config={
+                    "Date": st.column_config.DateColumn("Payment Date", format="YYYY-MM-DD"),
+                    "Original Amount": st.column_config.TextColumn("Original Amount"),
+                    "Currency": st.column_config.TextColumn("Currency"),
+                    "Years Invested": st.column_config.NumberColumn("Years", format="%.2f"),
+                    "Future Value": st.column_config.TextColumn("Future Value"),
+                    "Interest Earned": st.column_config.TextColumn("Interest Earned"),
+                    "ROI %": st.column_config.TextColumn("ROI %"),
+                    "Exchange Rate": st.column_config.NumberColumn("Exchange Rate", format="%.4f")
+                },
+                hide_index=True,
+                use_container_width=True
+            )
+            
+            # Add summary statistics below the table
+            st.subheader("📊 Investment Statistics")
+            col_stats1, col_stats2, col_stats3, col_stats4 = st.columns(4)
+            
+            with col_stats1:
+                st.metric(
+                    "Total Payments",
+                    len(results['results']),
+                    "Individual investments"
+                )
+            
+            with col_stats2:
+                avg_years = sum(payment['years'] for payment in results['results']) / len(results['results'])
+                st.metric(
+                    "Average Investment Time",
+                    f"{avg_years:.1f} years",
+                    "Weighted by amount"
+                )
+            
+            with col_stats3:
+                max_roi = max(((payment['future_value_investment_currency'] / payment['amount_in_investment_currency'] - 1) * 100) for payment in results['results'])
+                st.metric(
+                    "Best Single Investment ROI",
+                    f"{max_roi:.2f}%",
+                    "Highest return on single payment"
+                )
+            
+            with col_stats4:
+                min_roi = min(((payment['future_value_investment_currency'] / payment['amount_in_investment_currency'] - 1) * 100) for payment in results['results'])
+                st.metric(
+                    "Lowest Single Investment ROI",
+                    f"{min_roi:.2f}%",
+                    "Lowest return on single payment"
+                )
 
 if __name__ == "__main__":
     main()
