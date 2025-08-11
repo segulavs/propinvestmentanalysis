@@ -3,8 +3,6 @@
   "propertyCurrency": "AED",
   "investmentAmountCurrency": "AED",
   "returnRate": 19.9,
-  "initialHouseAmount": 2204405.0,
-  "sellingAmount": 2500000.0,
   "payments": [
     {
       "date": "2023-09-04",
@@ -26,5 +24,7 @@
       "amount": 220441.0,
       "amount_currency": "AED"
     }
-  ]
+  ],
+  "initialHouseAmount": 2204405.0,
+  "sellingAmount": 0
 }
