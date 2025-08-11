@@ -1427,6 +1427,115 @@ def main():
                     f"Full appreciation you keep"
                 )
             
+            # Reverse Calculation Results Table
+            st.subheader("📋 Reverse Calculation Results Table")
+            st.write("Detailed breakdown of your reverse calculation analysis:")
+            
+            # Create reverse calculation data for the table
+            reverse_calc_data = [
+                {
+                    'Metric': 'Initial House Value',
+                    'Amount': f"{SUPPORTED_CURRENCIES[property_currency]['symbol']}{initial_house_amount:,.2f}",
+                    'Currency': property_currency,
+                    'Description': 'Original house purchase price'
+                },
+                {
+                    'Metric': 'Your Total Investment',
+                    'Amount': f"{SUPPORTED_CURRENCIES[property_currency]['symbol']}{total_invested_property:,.2f}",
+                    'Currency': property_currency,
+                    'Description': f'Your {your_investment_percentage*100:.1f}% share of house value'
+                },
+                {
+                    'Metric': 'Desired Selling Amount',
+                    'Amount': f"{SUPPORTED_CURRENCIES[property_currency]['symbol']}{selling_amount:,.2f}",
+                    'Currency': property_currency,
+                    'Description': 'Your target selling price'
+                },
+                {
+                    'Metric': 'Property Appreciation',
+                    'Amount': f"{SUPPORTED_CURRENCIES[property_currency]['symbol']}{property_appreciation:,.2f}",
+                    'Currency': property_currency,
+                    'Description': 'Increase in house value since purchase'
+                },
+                {
+                    'Metric': 'Your Share of House Value',
+                    'Amount': f"{SUPPORTED_CURRENCIES[property_currency]['symbol']}{your_share_of_house:,.2f}",
+                    'Currency': property_currency,
+                    'Description': f'Your {your_investment_percentage*100:.1f}% of current house value'
+                },
+                {
+                    'Metric': 'Your Total Return',
+                    'Amount': f"{SUPPORTED_CURRENCIES[property_currency]['symbol']}{your_total_return:,.2f}",
+                    'Currency': property_currency,
+                    'Description': 'House value share + appreciation'
+                },
+                {
+                    'Metric': 'Pure Profit/Loss',
+                    'Amount': f"{SUPPORTED_CURRENCIES[property_currency]['symbol']}{potential_return:,.2f}",
+                    'Currency': property_currency,
+                    'Description': 'Total return minus your investment'
+                },
+                {
+                    'Metric': 'ROI Percentage',
+                    'Amount': f"{selling_roi:.2f}%",
+                    'Currency': 'N/A',
+                    'Description': 'Return on investment percentage'
+                },
+                {
+                    'Metric': 'Annualized ROI',
+                    'Amount': f"{selling_time_weighted_roi:.2f}%",
+                    'Currency': 'N/A',
+                    'Description': 'Yearly return rate'
+                },
+                {
+                    'Metric': 'Investment Efficiency',
+                    'Amount': f"{your_investment_percentage*100:.1f}%",
+                    'Currency': 'N/A',
+                    'Description': 'Percentage of house value you invested'
+                }
+            ]
+            
+            # Display the reverse calculation table
+            if reverse_calc_data:
+                df_reverse = pd.DataFrame(reverse_calc_data)
+                st.dataframe(
+                    df_reverse,
+                    column_config={
+                        "Metric": st.column_config.TextColumn("Calculation Metric", width="medium"),
+                        "Amount": st.column_config.TextColumn("Amount/Value", width="medium"),
+                        "Currency": st.column_config.TextColumn("Currency", width="small"),
+                        "Description": st.column_config.TextColumn("Description", width="large")
+                    },
+                    hide_index=True,
+                    use_container_width=True
+                )
+            
+            # Add scenario analysis below the table
+            st.subheader("🎯 Scenario Analysis")
+            col_scenario1, col_scenario2 = st.columns(2)
+            
+            with col_scenario1:
+                st.info(f"""
+                **📈 Best Case Scenario:**
+                - If house sells at **{SUPPORTED_CURRENCIES[property_currency]['symbol']}{selling_amount:,.2f}**
+                - Your ROI: **{selling_roi:.2f}%**
+                - Annualized return: **{selling_time_weighted_roi:.2f}%**
+                - Total profit: **{SUPPORTED_CURRENCIES[property_currency]['symbol']}{potential_return:,.2f}**
+                """)
+            
+            with col_scenario2:
+                # Calculate break-even scenario
+                break_even_amount = total_invested_property / your_investment_percentage if your_investment_percentage > 0 else 0
+                break_even_roi = 0
+                
+                st.warning(f"""
+                **⚖️ Break-Even Scenario:**
+                - House must sell for: **{SUPPORTED_CURRENCIES[property_currency]['symbol']}{break_even_amount:,.2f}**
+                - At this price, ROI: **{break_even_roi:.2f}%**
+                - No profit, no loss
+                - Investment efficiency: **{your_investment_percentage*100:.1f}%**
+                """)
+            
         # Simple results summary
         st.subheader("📊 Results Summary")
         
