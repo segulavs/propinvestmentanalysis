@@ -4,8 +4,6 @@ import requests
 from datetime import datetime, timedelta
 import json
 import os
-import plotly.graph_objects as go
-import plotly.express as px
 import time # Added for debounce mechanism
 import pickle # For saving/loading results
 
